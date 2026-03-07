@@ -187,7 +187,7 @@ Pipeline registers between stages enable **parallel instruction execution**.
 ---
 
 # Processor Datapath
-![Datapath Block Diagram](docs/datapath_block.png)
+![Datapath Block Diagram](docs/datapath_block_diagram.png)
 
 The datapath illustrates how data flows through the processor during instruction execution.
 
