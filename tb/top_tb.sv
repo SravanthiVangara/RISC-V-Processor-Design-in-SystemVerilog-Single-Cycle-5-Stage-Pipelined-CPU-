@@ -103,7 +103,11 @@ initial begin
   rst = 1;
   #20 rst = 0;
 end
-
+  initial begin
+  
+$dumpfile("dump.vcd");
+  $dumpvars(0,tb_top);
+  end
 
 //=============================
 // ASSERTION
