@@ -58,6 +58,7 @@ The processor supports a subset of the **RV32I instruction set**.
 
 Supported instructions include:
 
+
 | Instruction Type | Examples          |
 | ---------------- | ----------------- |
 | R-Type           | ADD, SUB, AND, OR |
@@ -165,6 +166,11 @@ The processor uses a **five-stage pipeline architecture**.
 ### IF – Instruction Fetch
 
 The instruction is fetched from instruction memory using the program counter.
+Pipeline registers used:
+• IF/ID
+• ID/EX
+• EX/MEM
+• MEM/WB
 
 ### ID – Instruction Decode
 
@@ -271,7 +277,17 @@ endproperty
 
 assert property(no_write_x0);
 ```
+Explanation:
 
+The property is evaluated on every rising clock edge.
+
+disable iff(rst) disables the check during reset.
+
+The implication operator |-> specifies that if the memory read signal (mem_rd) is 0, the memory output (mem_result) must also be 0.
+
+Purpose
+
+This assertion verifies that memory output data is only valid when a memory read operation is enabled, preventing unintended values from appearing on the memory output during simulation
 This assertion checks that memory results are not written when memory read is disabled.
 
 Assertions help detect functional errors during simulation.
@@ -339,6 +355,14 @@ Pipeline stage transitions
 
 The waveform confirms correct pipeline behavior.
 
+---
+
+ ## Tools Used
+
+• SystemVerilog for RTL design  
+• Verilator v5.044 for simulation  
+• EDA Playground for running simulations  
+• EPWave for waveform visualization
 
 # Design Highlights
 
@@ -348,7 +372,7 @@ The waveform confirms correct pipeline behavior.
 • Assertion-based verification
 • Functional simulation and waveform validation
 
----
+--- 
 
 # Future Improvements
 
@@ -357,7 +381,6 @@ The waveform confirms correct pipeline behavior.
 * RV32M Extension
 * Interrupt Handling
 * Exception Handling
-
 
 ---
 
