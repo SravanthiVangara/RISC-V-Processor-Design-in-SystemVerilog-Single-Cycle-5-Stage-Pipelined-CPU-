@@ -9,7 +9,7 @@ This repository presents the RTL implementation of a **32-bit RISC-V processor**
 
 The design demonstrates key processor microarchitecture concepts including instruction decoding, ALU execution, register file operation, pipeline stage separation, memory access, and assertion-based verification.
 
-Simulation and verification were performed using **EDA Playground with Icarus Verilog**.
+Simulation and verification were performed using **EDA Playground with Verilator v5.044**.
 
 ---
 
@@ -52,7 +52,7 @@ This structure allows different instructions to execute in different stages simu
 
 # RISC-V Instruction Set
 
-![RISC-V ISA](docs/riscv_isa.png)
+![RISC-V ISA](docs/riscv_isa.pdf)
 
 The processor supports a subset of the **RV32I instruction set**.
 
@@ -73,7 +73,7 @@ These instructions cover arithmetic operations, memory operations, and control f
 
 # Processor Block Diagram
 
-![Processor Block Diagram](docs/processor_block_diagram.png)
+![Processor Block Diagram](docs/system_architecture.png)
 
 This diagram illustrates the major hardware blocks used in the processor.
 
@@ -278,6 +278,28 @@ Assertions help detect functional errors during simulation.
 
 ---
 
+# Running the Simulation
+
+Simulation is performed using **EDA Playground**.
+
+### Single-Cycle Processor
+
+https://www.edaplayground.com/x/dkzw
+
+### Pipelined Processor
+
+https://www.edaplayground.com/x/DSCK
+
+Steps:
+
+1. Open the EDA Playground link
+2. Load RTL files in the design section
+3. Load the testbench file
+4. Run simulation
+5. View waveform using EPWave
+
+---
+
 # Simulation Waveform
 Single Cycle Processor Waveform
 
@@ -316,28 +338,6 @@ Register writeback
 Pipeline stage transitions
 
 The waveform confirms correct pipeline behavior.
-
-# Running the Simulation
-
-Simulation is performed using **EDA Playground**.
-
-### Single-Cycle Processor
-
-https://www.edaplayground.com/x/dkzw
-
-### Pipelined Processor
-
-https://www.edaplayground.com/x/DSCK
-
-Steps:
-
-1. Open the EDA Playground link
-2. Load RTL files in the design section
-3. Load the testbench file
-4. Run simulation
-5. View waveform using EPWave
-
----
 
 
 # Design Highlights
