@@ -20,6 +20,7 @@ stall
 initial begin
   $dumpfile("dump.vcd"); 
   $dumpvars(0,hazard_tb);
+end
 initial begin
 
 id_rs1 = 5'd3;
@@ -33,5 +34,6 @@ ex_memread = 1;
 $display("STALL = %b",stall);
 
 end
+
 
 endmodule
