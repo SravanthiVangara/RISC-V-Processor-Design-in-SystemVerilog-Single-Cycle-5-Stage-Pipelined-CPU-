@@ -25,34 +25,38 @@ always_comb begin
 
     case(opcode)
 
-        7'b0110011: begin
-            RegWrite = 1;
-            ALUOp    = 2'b10;
-        end
+    7'b0110011: begin
+        RegWrite = 1;
+        ALUOp    = 2'b10;
+    end
 
-        7'b0010011: begin
-            RegWrite = 1;
-            ALUSrc   = 1;
-        end
+    7'b0010011: begin
+        RegWrite = 1;
+        ALUSrc   = 1;
+    end
 
-        7'b0000011: begin
-            RegWrite = 1;
-            MemRead  = 1;
-            MemtoReg = 1;
-            ALUSrc   = 1;
-        end
+    7'b0000011: begin
+        RegWrite = 1;
+        MemRead  = 1;
+        MemtoReg = 1;
+        ALUSrc   = 1;
+    end
 
-        7'b0100011: begin
-            MemWrite = 1;
-            ALUSrc   = 1;
-        end
+    7'b0100011: begin
+        MemWrite = 1;
+        ALUSrc   = 1;
+    end
 
-        7'b1100011: begin
-            Branch = 1;
-            ALUOp  = 2'b01;
-        end
+    7'b1100011: begin
+        Branch = 1;
+        ALUOp  = 2'b01;
+    end
 
-    endcase
+    default: begin
+        // keep default control signals (NOP)
+    end
+
+endcase
 
 end
 
@@ -114,37 +118,6 @@ control_unit cu(
 .ALUSrc(alu_src),
 .MemtoReg(),
 .ALUOp()
-);
-
-endmodule
-module riscv_core
-(
-    input logic clk,
-    input logic rst
-);
-
-logic [31:0] instruction;
-
-logic mem_read;
-logic mem_write;
-logic reg_write;
-logic alu_src;
-
-logic [3:0] alu_sel;
-
-datapath dp(
-    .clk(clk),
-    .rst(rst),
-    .instruction(instruction)
-);
-
-control_unit cu(
-    .instruction(instruction),
-    .mem_read(mem_read),
-    .mem_write(mem_write),
-    .reg_write(reg_write),
-    .alu_src(alu_src),
-    .alu_sel(alu_sel)
 );
 
 endmodule
