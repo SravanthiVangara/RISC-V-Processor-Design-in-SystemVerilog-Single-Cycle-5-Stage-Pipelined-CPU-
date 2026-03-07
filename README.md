@@ -162,15 +162,16 @@ Memory access occurs during the **MEM pipeline stage**.
 
 ![Pipeline Architecture](docs/pipeline_architecture.png)
 The processor uses a **five-stage pipeline architecture**.
-
-### IF – Instruction Fetch
-
-The instruction is fetched from instruction memory using the program counter.
 Pipeline registers used:
 • IF/ID
 • ID/EX
 • EX/MEM
 • MEM/WB
+
+
+### IF – Instruction Fetch
+
+The instruction is fetched from instruction memory using the program counter.
 
 ### ID – Instruction Decode
 
@@ -288,7 +289,6 @@ The implication operator |-> specifies that if the memory read signal (mem_rd) i
 Purpose
 
 This assertion verifies that memory output data is only valid when a memory read operation is enabled, preventing unintended values from appearing on the memory output during simulation
-This assertion checks that memory results are not written when memory read is disabled.
 
 Assertions help detect functional errors during simulation.
 
@@ -316,7 +316,7 @@ Steps:
 
 ---
 
-# Simulation Waveform
+# Simulation Waveforms
 Single Cycle Processor Waveform
 
 ![Pipeline Waveform](docs/single_cycle_waveform.png)
@@ -387,4 +387,4 @@ The waveform confirms correct pipeline behavior.
 # Author
 
 Sravanthi Vangara
-VLSI Design | RTL Design | Digital Systems
+VLSI Design | RTL Design | Digital Design
