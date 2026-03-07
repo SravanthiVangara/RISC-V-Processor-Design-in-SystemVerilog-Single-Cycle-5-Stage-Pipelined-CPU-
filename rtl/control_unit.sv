@@ -24,46 +24,40 @@ always_comb begin
     MemtoReg = 0;
     ALUOp    = 2'b00;
 
-    case(opcode)
+  case(opcode)
 
-        // R-type
-        7'b0110011: begin
-            RegWrite = 1;
-            ALUSrc   = 0;
-            ALUOp    = 2'b10;
-        end
+    7'b0110011: begin
+        RegWrite = 1;
+        ALUOp    = 2'b10;
+    end
 
-        // I-type ADDI
-        7'b0010011: begin
-            RegWrite = 1;
-            ALUSrc   = 1;
-            ALUOp    = 2'b00;
-        end
+    7'b0010011: begin
+        RegWrite = 1;
+        ALUSrc   = 1;
+    end
 
-        // LOAD
-        7'b0000011: begin
-            RegWrite = 1;
-            MemRead  = 1;
-            MemtoReg = 1;
-            ALUSrc   = 1;
-            ALUOp    = 2'b00;
-        end
+    7'b0000011: begin
+        RegWrite = 1;
+        MemRead  = 1;
+        MemtoReg = 1;
+        ALUSrc   = 1;
+    end
 
-        // STORE
-        7'b0100011: begin
-            MemWrite = 1;
-            ALUSrc   = 1;
-            ALUOp    = 2'b00;
-        end
+    7'b0100011: begin
+        MemWrite = 1;
+        ALUSrc   = 1;
+    end
 
-        // BRANCH
-        7'b1100011: begin
-            Branch = 1;
-            ALUOp  = 2'b01;
-        end
+    7'b1100011: begin
+        Branch = 1;
+        ALUOp  = 2'b01;
+    end
 
-    endcase
+    default: begin
+        // keep default control signals (NOP)
+    end
 
+endcase
 end
 
 endmodule
