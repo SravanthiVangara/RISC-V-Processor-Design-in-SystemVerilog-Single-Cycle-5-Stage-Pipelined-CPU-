@@ -113,15 +113,16 @@ $dumpfile("dump.vcd");
 // ASSERTION
 //=============================
 
-property no_write_x0;
+property x0_always_zero;
 
-  @(posedge clk)
-  disable iff(rst)
-  (dut.mem_rd == 0) |-> (dut.mem_result == 0);
+    @(posedge clk)
+    disable iff (rst)
+    dut.regfile[0] == 32'b0;
 
 endproperty
 
-assert property(no_write_x0);
+assert property (x0_always_zero)
+    else $error("RISC-V x0 was modified!");
 
 
 //=============================
