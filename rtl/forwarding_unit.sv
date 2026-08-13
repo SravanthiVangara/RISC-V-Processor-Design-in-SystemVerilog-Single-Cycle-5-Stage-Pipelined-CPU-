@@ -1,38 +1,40 @@
-// Code your design here
-module forwarding_unit(
+module forwarding_unit (
+    input  logic [4:0] ex_rs1,
+    input  logic [4:0] ex_rs2,
 
-input [4:0] ex_rs1,
-input [4:0] ex_rs2,
+    input  logic [4:0] mem_rd,
+    input  logic       mem_regwrite,
 
-input [4:0] mem_rd,
-input mem_regwrite,
+    input  logic [4:0] wb_rd,
+    input  logic       wb_regwrite,
 
-input [4:0] wb_rd,
-input wb_regwrite,
-
-output reg [1:0] forwardA,
-output reg [1:0] forwardB
-
+    output logic [1:0] forwardA,
+    output logic [1:0] forwardB
 );
 
-always @(*) begin
+always_comb begin
 
-forwardA = 2'b00;
-forwardB = 2'b00;
+    // Default: use normal register-file values
+    forwardA = 2'b00;
+    forwardB = 2'b00;
 
-// MEM stage forwarding
-if(mem_regwrite && (mem_rd != 0) && (mem_rd == ex_rs1))
-forwardA = 2'b10;
+    // MEM stage has priority because it contains
+    // the more recently produced value.
+    if (mem_regwrite && (mem_rd != 5'd0) &&
+        (mem_rd == ex_rs1))
+        forwardA = 2'b10;
 
-if(mem_regwrite && (mem_rd != 0) && (mem_rd == ex_rs2))
-forwardB = 2'b10;
+    else if (wb_regwrite && (wb_rd != 5'd0) &&
+             (wb_rd == ex_rs1))
+        forwardA = 2'b01;
 
-// WB stage forwarding
-if(wb_regwrite && (wb_rd != 0) && (wb_rd == ex_rs1))
-forwardA = 2'b01;
+    if (mem_regwrite && (mem_rd != 5'd0) &&
+        (mem_rd == ex_rs2))
+        forwardB = 2'b10;
 
-if(wb_regwrite && (wb_rd != 0) && (wb_rd == ex_rs2))
-forwardB = 2'b01;
+    else if (wb_regwrite && (wb_rd != 5'd0) &&
+             (wb_rd == ex_rs2))
+        forwardB = 2'b01;
 
 end
 
