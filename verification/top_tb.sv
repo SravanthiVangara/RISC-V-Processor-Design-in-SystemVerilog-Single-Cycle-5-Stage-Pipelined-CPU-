@@ -1,146 +1,185 @@
-//=============================
-// DRIVER
-//=============================
-
 class driver;
 
-  task run();
-    $display("Driver running");
-  endtask
+    task run();
+        $display("Driver running");
+    endtask
 
 endclass
 
-
-//=============================
-// MONITOR
-//=============================
 
 class monitor;
 
-  task run();
-    $display("Monitor running");
-  endtask
+    task run();
+        $display("Monitor running");
+    endtask
 
 endclass
 
-
-//=============================
-// SEQUENCE
-//=============================
 
 class riscv_sequence;
 
-  bit [31:0] instr_list [0:4];
+    bit [31:0] instr_list [0:4];
 
-  function new();
-    instr_list[0] = 32'h003100B3;
-    instr_list[1] = 32'h40628233;
-    instr_list[2] = 32'h0002A303;
-  endfunction
+    function new();
+
+        instr_list[0] = 32'h003100B3;
+        instr_list[1] = 32'h40628233;
+        instr_list[2] = 32'h005303B3;
+
+    endfunction
 
 endclass
 
-
-//=============================
-// ENVIRONMENT
-//=============================
 
 class env;
 
-  driver d;
-  monitor m;
+    driver d;
+    monitor m;
 
-  function new();
-    d = new();
-    m = new();
-  endfunction
+    function new();
 
-  task run();
+        d = new();
+        m = new();
 
-    fork
-      d.run();
-      m.run();
-    join
+    endfunction
 
-  endtask
+    task run();
+
+        fork
+            d.run();
+            m.run();
+        join
+
+    endtask
 
 endclass
 
 
-
-//=============================
-// TOP TESTBENCH
-//=============================
-
 module tb_top;
 
-reg clk;
-reg rst;
+    reg clk;
+    reg rst;
 
-env e;
+    env e;
 
-
-// DUT instance
-pipeline_cpu dut(
-  .clk(clk),
-  .rst(rst)
-);
+    pipeline_cpu dut(
+        .clk(clk),
+        .rst(rst)
+    );
 
 
-//=============================
-// CLOCK
-//=============================
+    //=============================
+    // CLOCK
+    //=============================
 
-initial clk = 0;
-always #5 clk = ~clk;
+    initial clk = 1'b0;
 
-
-//=============================
-// RESET
-//=============================
-
-initial begin
-  rst = 1;
-  #20 rst = 0;
-end
-  initial begin
-  
-$dumpfile("dump.vcd");
-  $dumpvars(0,tb_top);
-  end
-
-//=============================
-// ASSERTION
-//=============================
-property x0_always_zero;
-
-    @(posedge clk)
-    disable iff (rst)
-    dut.regfile[0] == 32'b0;
-
-endproperty
-
-assert property (x0_always_zero)
-    else $error("x0 changed from zero!");
+    always #5 clk = ~clk;
 
 
+    //=============================
+    // RESET
+    //=============================
 
-//=============================
-// TEST
-//=============================
+    initial begin
 
-initial begin
+        rst = 1'b1;
 
-  e = new();
+        #20;
 
-  #30;
+        rst = 1'b0;
 
-  e.run();
+    end
 
-  #200;
 
-  $finish;
+    //=============================
+    // WAVEFORM
+    //=============================
 
-end
+    initial begin
+
+        $dumpfile("pipeline.vcd");
+        $dumpvars(0, tb_top);
+
+    end
+
+
+    //=============================
+    // SVA
+    //=============================
+
+    property x0_always_zero;
+
+        @(posedge clk)
+        disable iff (rst)
+        dut.regfile[0] == 32'b0;
+
+    endproperty
+
+    assert property (x0_always_zero)
+        else $error("SVA FAILED: x0 changed from zero!");
+
+
+    //=============================
+    // EASY SVA OUTPUT
+    //=============================
+
+    always @(posedge clk) begin
+
+        if (!rst) begin
+
+            if (dut.regfile[0] == 32'b0)
+
+                $display("SVA PASS: x0 = %h",
+                         dut.regfile[0]);
+
+            else
+
+                $display("SVA FAIL: x0 = %h",
+                         dut.regfile[0]);
+
+        end
+
+    end
+
+
+    //=============================
+    // PIPELINE OBSERVATION
+    //=============================
+
+    always @(posedge clk) begin
+
+        if (!rst) begin
+
+            $display(
+                "PC=%h INSTR=%h ALU=%h MEM=%h",
+                dut.pc,
+                dut.instr,
+                dut.alu_result,
+                dut.mem_result
+            );
+
+        end
+
+    end
+
+
+    //=============================
+    // TEST
+    //=============================
+
+    initial begin
+
+        e = new();
+
+        #30;
+
+        e.run();
+
+        #200;
+
+        $finish;
+
+    end
 
 endmodule
