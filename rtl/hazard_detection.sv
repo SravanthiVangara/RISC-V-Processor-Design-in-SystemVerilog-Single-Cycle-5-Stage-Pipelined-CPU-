@@ -1,22 +1,27 @@
-// Code your design here
-module hazard_detection(
+module hazard_detection (
+    input  logic [4:0] id_rs1,
+    input  logic [4:0] id_rs2,
 
-input [4:0] id_rs1,
-input [4:0] id_rs2,
+    input  logic [4:0] ex_rd,
+    input  logic       ex_memread,
 
-input [4:0] ex_rd,
-input ex_memread,
-
-output reg stall
-
+    output logic       stall
 );
 
-always @(*) begin
+always_comb begin
 
-stall = 0;
+    stall = 1'b0;
 
-if(ex_memread && ((ex_rd == id_rs1) || (ex_rd == id_rs2)))
-stall = 1;
+    // Load-use hazard:
+    // instruction in EX is loading a value that the
+    // instruction in ID immediately needs.
+    if (ex_memread &&
+        (ex_rd != 5'd0) &&
+        ((ex_rd == id_rs1) || (ex_rd == id_rs2))) begin
+
+        stall = 1'b1;
+
+    end
 
 end
 
