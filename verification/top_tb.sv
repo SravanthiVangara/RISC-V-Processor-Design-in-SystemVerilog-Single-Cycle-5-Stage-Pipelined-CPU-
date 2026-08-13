@@ -112,7 +112,6 @@ $dumpfile("dump.vcd");
 //=============================
 // ASSERTION
 //=============================
-
 property x0_always_zero;
 
     @(posedge clk)
@@ -122,7 +121,8 @@ property x0_always_zero;
 endproperty
 
 assert property (x0_always_zero)
-    else $error("RISC-V x0 was modified!");
+    else $error("x0 changed from zero!");
+
 
 
 //=============================
