@@ -1,4 +1,3 @@
-// Code your design here
 module register_file (
     input  logic clk,
     input  logic we,                     // write enable
@@ -11,14 +10,25 @@ module register_file (
     output logic [31:0] read_data2
 );
 
-logic [31:0] registers [31:0];
+    logic [31:0] registers [0:31];
 
-always_ff @(posedge clk) begin
-    if (we && rd != 0)
-        registers[rd] <= write_data;
-end
+    // Synchronous write
+    // x0 (register 0) cannot be written
+    always_ff @(posedge clk) begin
 
-assign read_data1 = (rs1 == 0) ? 32'b0 : registers[rs1];
-assign read_data2 = (rs2 == 0) ? 32'b0 : registers[rs2];
+        if (we && (rd != 5'd0))
+            registers[rd] <= write_data;
+
+        // Keep RISC-V x0 permanently zero
+        registers[0] <= 32'b0;
+
+    end
+
+    // Combinational reads
+    assign read_data1 =
+        (rs1 == 5'd0) ? 32'b0 : registers[rs1];
+
+    assign read_data2 =
+        (rs2 == 5'd0) ? 32'b0 : registers[rs2];
 
 endmodule
